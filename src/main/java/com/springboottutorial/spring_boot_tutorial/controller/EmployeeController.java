@@ -10,7 +10,6 @@ import java.util.List;
 
 @ApiController
 @RequestMapping("/employee")
-@Controller
 public class EmployeeController {
     private final EmployeeService employeeService;
 
