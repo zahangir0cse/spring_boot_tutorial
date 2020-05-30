@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Create User</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- Font Icon -->
+    <link rel="stylesheet" th:href="@{/fonts/material-icon/css/material-design-iconic-font.min.css}">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="main">
+
+    <!-- Sign up form -->
+    <section class="signup">
+        <div class="container">
+            <div class="signup-content">
+                <div class="signup-form">
+                    <h2 class="form-title">Sign up</h2>
+                    <center><p th:inline="text">[[${result}]]</p></center>
+                    <form method="POST" th:object="${user}" th:action="@{/user/create}" class="register-form" id="register-form">
+                        <div class="form-group">
+                            <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" name="name" id="name" th:value="*{name}" placeholder="Your Name"/>
+                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="email" name="email" id="email" th:value="*{email}" placeholder="Your Email"/>
+                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                        </div>
+                        <div class="form-group form-button">
+                            <input type="submit" name="create" id="create" class="form-submit" value="Register"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:if="${not #lists.isEmpty(users)}">
+        <table class="display table table-bordered table-striped table-hover">
+            <tr>
+                <th>SL No</th>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+            <tr th:each="user, iterator: ${users}">
+            <td th:text="${iterator.index} +1"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.email}"></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+<!-- JS -->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

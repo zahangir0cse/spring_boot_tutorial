@@ -18,7 +18,7 @@ public class DbInit {
         this.addressRepository = addressRepository;
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void init(){
         Address address = new Address();
         address.setCity("Dhaka");
