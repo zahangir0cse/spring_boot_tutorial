@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @RestController
-@CrossOrigin({"GET", "POST", "PUT", "DELETE"})
+@CrossOrigin(origins = "*", methods =
+        { GET, POST, PUT, DELETE, OPTIONS })
 @ResponseBody
 public @interface ApiController {
     @AliasFor(
