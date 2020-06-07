@@ -18,10 +18,13 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
+    private final MailService mailService;
     private final String root = "Product";
-    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper){
+
+    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper,MailService mailService){
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
+        this.mailService = mailService;
     }
     @Override
     public Response save(ProductDto productDto) {
@@ -30,6 +33,8 @@ public class ProductServiceImpl implements ProductService {
         if(product != null){
             return ResponseBuilder.getSuccessResponse(HttpStatus.CREATED, root+" created Successfully", null);
         }
+        String to[] = {"habib@abc.com"};
+        mailService.sendNonHtmlMail(to, "Test mail", "Hello Habib");
         return ResponseBuilder.getFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurs");
     }
 
@@ -43,6 +48,7 @@ public class ProductServiceImpl implements ProductService {
             if(product != null){
                 return ResponseBuilder.getSuccessResponse(HttpStatus.OK, root+" updated Successfully", null);
             }
+
             return ResponseBuilder.getFailureResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurs");
         }
         return ResponseBuilder.getFailureResponse(HttpStatus.NOT_FOUND, root+" not found");
