@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User get(String username) {
+        return userRepository.findByUsernameAndIsActiveTrue(username);
+    }
+
+    @Override
     public String delete(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         if(userOptional.isPresent() && userOptional.get()!= null){
