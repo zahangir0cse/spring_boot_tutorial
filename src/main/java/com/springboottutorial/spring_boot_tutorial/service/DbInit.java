@@ -34,7 +34,7 @@ public class DbInit {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void init(){
 //        Address address = new Address();
 //        address.setCity("Dhaka");

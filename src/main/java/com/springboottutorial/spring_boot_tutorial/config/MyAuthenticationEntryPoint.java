@@ -14,19 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Configuration
-public class MyAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private static final Logger logger = LogManager.getLogger(MyAuthenticationEntryPoint.class.getName());
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        response.addHeader("WWW-Authenticate", "Basic Realm="+getRealmName());
+//        response.addHeader("WWW-Authenticate", "Basic Realm="+getRealmName());
         logger.error("message: "+ authException.getMessage());
         response.setStatus(response.SC_UNAUTHORIZED);
         response.sendError(response.SC_UNAUTHORIZED, "Unauthorized Request");
     }
 
-    @Override
-    public void afterPropertiesSet() {
-        setRealmName("SpringBootTutorial");
-        super.afterPropertiesSet();
-    }
+//    @Override
+//    public void afterPropertiesSet() {
+//        setRealmName("SpringBootTutorial");
+//        super.afterPropertiesSet();
+//    }
 }

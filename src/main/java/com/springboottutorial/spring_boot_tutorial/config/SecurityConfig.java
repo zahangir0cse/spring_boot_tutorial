@@ -1,7 +1,10 @@
 package com.springboottutorial.spring_boot_tutorial.config;
 
 import com.springboottutorial.spring_boot_tutorial.filter.CustomFilter;
+import com.springboottutorial.spring_boot_tutorial.filter.JwtAuthenticationFilter;
+import com.springboottutorial.spring_boot_tutorial.filter.JwtTokenProvider;
 import com.springboottutorial.spring_boot_tutorial.service.impl.CustomUserDetailsService;
+import com.springboottutorial.spring_boot_tutorial.util.UrlConstraint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,12 +23,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final MyAuthenticationEntryPoint myAuthenticationEntryPoint;
-    private final CustomFilter customFilter;
-    public SecurityConfig(CustomFilter customFilter, CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder, MyAuthenticationEntryPoint myAuthenticationEntryPoint){
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder, MyAuthenticationEntryPoint myAuthenticationEntryPoint){
         this.customUserDetailsService =customUserDetailsService;
         this.passwordEncoder =passwordEncoder;
         this.myAuthenticationEntryPoint = myAuthenticationEntryPoint;
-        this.customFilter = customFilter;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -38,6 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+//    @Bean
+//    public JwtTokenProvider getTokenProvider(){
+//
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -53,11 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/login")
+                .antMatchers(UrlConstraint.AuthManagement.ROOT+allPrefix)
                 .permitAll()
 //                .antMatchers("/jdhhd").hasAnyRole("", "")
         .anyRequest()
                 .authenticated();
-        http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
