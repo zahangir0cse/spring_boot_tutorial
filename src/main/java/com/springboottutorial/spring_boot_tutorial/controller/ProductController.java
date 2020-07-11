@@ -1,6 +1,7 @@
 package com.springboottutorial.spring_boot_tutorial.controller;
 
 import com.springboottutorial.spring_boot_tutorial.annotations.ApiController;
+import com.springboottutorial.spring_boot_tutorial.annotations.ValidateData;
 import com.springboottutorial.spring_boot_tutorial.dto.ProductDto;
 import com.springboottutorial.spring_boot_tutorial.dto.Response;
 import com.springboottutorial.spring_boot_tutorial.service.ProductService;
@@ -22,18 +23,14 @@ public class ProductController {
     }
 
     @PostMapping(UrlConstraint.ProductManagement.CREATE)
+    @ValidateData
     public Response create(@Valid @RequestBody ProductDto productDto, BindingResult result) {
-        if (result.hasErrors()) {
-            return ResponseBuilder.getFailureResponse(result, "Bean Binding error");
-        }
         return productService.save(productDto);
     }
 
     @PutMapping(UrlConstraint.ProductManagement.UPDATE)
+    @ValidateData
     public Response update(@PathVariable("id") Long id, @Valid @RequestBody ProductDto productDto, BindingResult result) {
-        if (result.hasErrors()) {
-            return ResponseBuilder.getFailureResponse(result, "Bean Binding error");
-        }
         return productService.update(id, productDto);
     }
 
