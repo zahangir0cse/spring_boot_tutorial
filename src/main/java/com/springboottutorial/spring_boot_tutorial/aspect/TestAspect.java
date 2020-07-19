@@ -46,7 +46,7 @@ public class TestAspect {
     }
 
 
-    @Pointcut("(execution(public * com.springboottutorial.spring_boot_tutorial.controller.*.*(..))  && args(..)  && !execution(public * com.springboottutorial.spring_boot_tutorial.controller.EmployeeController.*(..)) && !execution(public * com.springboottutorial.spring_boot_tutorial.controller.SpringBootTestController.*(..))&& !execution(public * com.springboottutorial.spring_boot_tutorial.controller.UserController.*(..)))")
+    @Pointcut("(execution(public * com.springboottutorial.spring_boot_tutorial.controller.*.*(..))  && args(..)  && !execution(public * com.springboottutorial.spring_boot_tutorial.controller.EmployeeController.*(..)) && !execution(public * com.springboottutorial.spring_boot_tutorial.controller.AuthController.getPdf(..)) && !execution(public * com.springboottutorial.spring_boot_tutorial.controller.SpringBootTestController.*(..))&& !execution(public * com.springboottutorial.spring_boot_tutorial.controller.UserController.*(..)))")
     public void allController() {
     }
 }

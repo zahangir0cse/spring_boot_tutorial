@@ -19,5 +19,6 @@ public final class UrlConstraint {
     public static class AuthManagement {
         public static final String ROOT = API + "/auth";
         public static final String LOGIN = "/login";
+        public static final String DOWNLOAD = "download";
     }
 }

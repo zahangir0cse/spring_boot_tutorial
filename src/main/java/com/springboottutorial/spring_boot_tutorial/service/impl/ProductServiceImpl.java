@@ -6,24 +6,43 @@ import com.springboottutorial.spring_boot_tutorial.model.Product;
 import com.springboottutorial.spring_boot_tutorial.repository.ProductRepository;
 import com.springboottutorial.spring_boot_tutorial.service.ProductService;
 import com.springboottutorial.spring_boot_tutorial.util.ResponseBuilder;
+import com.zaxxer.hikari.HikariDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("productService")
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
+    private final HikariDataSource dataSource;
     private final MailService mailService;
     private final String root = "Product";
+    @Value("classpath:reports/product.jasper")
+    private Resource reportResource;
 
-    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper,MailService mailService){
+    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper, HikariDataSource dataSource, MailService mailService){
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
+        this.dataSource = dataSource;
         this.mailService = mailService;
     }
     @Override
@@ -89,6 +108,26 @@ public class ProductServiceImpl implements ProductService {
         return ResponseBuilder.getSuccessResponse(HttpStatus.OK, root+" retrieved Successfully", productDtos);
     }
 
+    @Override
+    public HttpEntity<byte[]> getPdfResponse(HttpServletResponse response) {
+        Map<String, Object> reportParams = new HashMap<>();
+        try {
+            JasperPrint print = JasperFillManager.fillReport(reportResource.getFile().getPath(), reportParams, dataSource.getConnection());
+            byte [] pdfBytes = JasperExportManager.exportReportToPdf(print);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            response.setHeader("Content-Description", "attachment; filename=abc.pdf");
+            return new HttpEntity<>(pdfBytes, headers);
+        } catch (JRException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
     private List<ProductDto> getProducts(List<Product> products){
         List<ProductDto> productDtos = new ArrayList<>();
         products.forEach(product -> {
@@ -98,4 +137,6 @@ public class ProductServiceImpl implements ProductService {
         });
         return productDtos;
     }
+
+
 }
